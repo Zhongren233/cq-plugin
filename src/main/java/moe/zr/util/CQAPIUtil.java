@@ -6,7 +6,6 @@ import moe.zr.vo.CQAPI;
 import moe.zr.vo.in.Message;
 import moe.zr.vo.out.SendMessage;
 
-import java.net.URI;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;

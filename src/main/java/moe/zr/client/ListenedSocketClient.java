@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import moe.zr.handler.MessageHandler;
-import moe.zr.reconnect.ReconnectHandler;
 import moe.zr.vo.in.Message;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
