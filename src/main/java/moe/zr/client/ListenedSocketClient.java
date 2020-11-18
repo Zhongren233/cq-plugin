@@ -33,7 +33,7 @@ public class ListenedSocketClient extends WebSocketClient {
     @Override
     public void onClose(int i, String s, boolean b) {
         log.warn("丢失连接");
-        ReconnectHandler.reconnect(this);
+        new Thread(this::reconnect).start();
     }
 
     @Override

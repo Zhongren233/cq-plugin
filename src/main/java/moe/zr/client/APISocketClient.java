@@ -40,7 +40,8 @@ public class APISocketClient extends org.java_websocket.client.WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-        ReconnectHandler.reconnect(this);
+        log.warn("丢失连接");
+        new Thread(this::reconnect).start();
     }
 
     @Override
