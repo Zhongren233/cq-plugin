@@ -7,8 +7,6 @@ import moe.zr.annotation.MessageStartWith;
 import moe.zr.util.CQAPIUtil;
 import moe.zr.vo.in.Message;
 
-import java.lang.reflect.Method;
-
 @Handler
 @Slf4j
 public class TestHandler {
