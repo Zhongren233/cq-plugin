@@ -2,7 +2,6 @@ package moe.zr.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import moe.zr.util.CQAPIUtil;
-import moe.zr.vo.CQAPI;
 import moe.zr.vo.in.Message;
 
 @Slf4j
