@@ -28,7 +28,14 @@ public class APISocketClient extends org.java_websocket.client.WebSocketClient {
     @Override
     public void onMessage(String s) {
         Result result = JSON.parseObject(s, Result.class);
+        logResult(result);
         log.info("{} 状态: {}",result.getEcho(),result.getStatus());
+    }
+
+    public void logResult(Result result){
+        if (result.getRetcode()!=0) {
+            log.warn("message_id: {} 发送失败",result);
+        }
     }
 
     @Override
