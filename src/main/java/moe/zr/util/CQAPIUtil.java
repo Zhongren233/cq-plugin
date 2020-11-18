@@ -24,16 +24,11 @@ public class CQAPIUtil {
     });
     public static Function<Message, SendMessage> castMessage = (SendMessage::new);
 
-    public static void repeatWithMe(Message m) {
-        send.accept(castMessage.apply(m));
-    }
-
-    public static void ridicule(Message m) {
-        send.accept(castMessage.apply(m).setMessage("[CQ:image,file=7b754c81dffa4018ac179eac8805c062.image]"));
-
-    }
+/*
 
     public static void holdHands(Message message) {
     send.accept(castMessage.apply(message).setMessage("[CQ:image,file=2ee882b144dee9ce28e5da681626f529.image]"));
     }
+
+ */
 }

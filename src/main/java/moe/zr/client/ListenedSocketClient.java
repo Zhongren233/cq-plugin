@@ -3,7 +3,7 @@ package moe.zr.client;
 import com.alibaba.fastjson.JSON;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import moe.zr.handler.MessageHandler;
+import moe.zr.handler.MessageHandlerCenter;
 import moe.zr.vo.in.Message;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -25,7 +25,7 @@ public class ListenedSocketClient extends WebSocketClient {
     @Override
     public void onMessage(String s) {
         Message message = JSON.parseObject(s, Message.class);
-        MessageHandler.onMessage(message);
+        MessageHandlerCenter.onMessage(message);
     }
 
     @SneakyThrows
