@@ -10,7 +10,7 @@ public class MessageHandler {
 
     public static void onMessage(Message message) {
         if (message.getMessage() == null) return;
-        log.info("群{}内{}({})的消息:{}",
+        log.info("群 {} 内 {}({})的消息:{}",
                 message.getGroup_id(),
                 message.getSender().getNickname(),
                 message.getSender().getUser_id(),
