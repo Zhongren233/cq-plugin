@@ -41,7 +41,7 @@ public class MessageHandlerCenter {
 
     private static void searchMethodAndInvoke(Message message) {
         containsMapping.forEach((k, v) -> {
-            if (k.contains(message.getMessage())) {
+            if (message.getMessage().contains(k)) {
                 try {
                     v.invoke(Message.class.newInstance(),message);
                 } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
@@ -50,7 +50,7 @@ public class MessageHandlerCenter {
             }
         });
         startWithMapping.forEach((k, v) -> {
-            if (k.startsWith(message.getMessage())) {
+            if (message.getMessage().startsWith(k)) {
                 try {
                     v.invoke(Message.class.newInstance(),message);
                 } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
