@@ -10,13 +10,19 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 public class MessageHandlerCenter {
     private static final HashMap<String, Method> containsMapping = new HashMap<>();
     private static final HashMap<String, Method> startWithMapping = new HashMap<>();
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
 
-
+    /**
+     * 用这玩意去扫描所有被@{@link moe.zr.annotation.Handler} 标记的类
+     * 然后把他们里面所有的方法存到对应的map里
+     */
     static {
         Reflections reflections = new Reflections(
                 MessageHandlerCenter.class.getPackage().getName(),
@@ -27,6 +33,7 @@ public class MessageHandlerCenter {
         reflections.getMethodsAnnotatedWith(MessageStartWith.class).forEach(method ->
                 startWithMapping.put(method.getAnnotation(MessageStartWith.class).value(), method)
         );
+
     }
 
     public static void onMessage(Message message) {
@@ -36,14 +43,14 @@ public class MessageHandlerCenter {
                 message.getSender().getNickname(),
                 message.getSender().getUser_id(),
                 message.getMessage());
-        searchMethodAndInvoke(message);
+        EXECUTOR_SERVICE.execute(() -> searchMethodAndInvoke(message));
     }
 
     private static void searchMethodAndInvoke(Message message) {
         containsMapping.forEach((k, v) -> {
             if (message.getMessage().contains(k)) {
                 try {
-                    v.invoke(Message.class.newInstance(),message);
+                    v.invoke(Message.class.newInstance(), message);
                 } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                     e.printStackTrace();
                 }
@@ -52,7 +59,7 @@ public class MessageHandlerCenter {
         startWithMapping.forEach((k, v) -> {
             if (message.getMessage().startsWith(k)) {
                 try {
-                    v.invoke(Message.class.newInstance(),message);
+                    v.invoke(Message.class.newInstance(), message);
                 } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                     e.printStackTrace();
                 }

@@ -8,7 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class BootMain {
-    public static void main(String[] args) throws URISyntaxException, InterruptedException {
+    public static void main(String[] args)  {
         URI event = URI.create("ws://127.0.0.1:6700/event");
         ListenedSocketClient listenedSocketClient = new ListenedSocketClient(event);
         listenedSocketClient.connect();
