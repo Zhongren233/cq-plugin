@@ -15,9 +15,14 @@ public class YoutubeHandler {
     @MessageStartWith("https://www.youtube.com/watch?")
     public static void downLoadAudio(Message message) {
         String url = message.getMessage();
+        CQAPIUtil.send.accept(
+                CQAPIUtil.castMessage.apply(message)
+                        .setMessage("下载"+url)
+        );
         String str;
         try {
-            str = YoutubeService.downloadAudio(url);
+            YoutubeService.downloadAudio(url);
+            str = "下载成功";
         } catch (YoutubeDLException e) {
             e.printStackTrace();
             str = e.getMessage();
