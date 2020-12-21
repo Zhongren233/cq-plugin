@@ -13,16 +13,16 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * 用这玩意的静态块去扫描所有被@{@link moe.zr.annotation.Handler} 标记的类
+ * 然后把他们里面所有的方法存到对应的map里
+ */
 @Slf4j
 public class MessageHandlerCenter {
     private static final HashMap<String, Method> containsMapping = new HashMap<>();
     private static final HashMap<String, Method> startWithMapping = new HashMap<>();
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
 
-    /**
-     * 用这玩意去扫描所有被@{@link moe.zr.annotation.Handler} 标记的类
-     * 然后把他们里面所有的方法存到对应的map里
-     */
     static {
         Reflections reflections = new Reflections(
                 MessageHandlerCenter.class.getPackage().getName(),

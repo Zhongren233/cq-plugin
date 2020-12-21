@@ -7,7 +7,10 @@ import moe.zr.annotation.MessageStartWith;
 import moe.zr.util.CQAPIUtil;
 import moe.zr.vo.in.Message;
 
-@Handler
+/**
+ * 先把这玩意禁用 要不然全是牵手
+ */
+//@Handler
 @Slf4j
 public class TestHandler {
     @MessageContains("朋友")
