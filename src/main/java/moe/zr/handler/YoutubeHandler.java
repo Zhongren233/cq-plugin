@@ -22,7 +22,7 @@ public class YoutubeHandler {
         String str;
         try {
             String filename = YoutubeService.downloadAudio(url);
-            str = "下载成功,地址为down.akina.xyz/"+filename;
+            str = "下载成功,地址为http://down.akina.xyz/"+filename;
         } catch (YoutubeDLException e) {
             e.printStackTrace();
             str = e.getMessage();
