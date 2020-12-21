@@ -10,8 +10,10 @@ public class YoutubeService {
         String path = "D:/youtube-dl/down";
         YoutubeDLRequest youtubeDLRequest = new YoutubeDLRequest(url, path);
         youtubeDLRequest.setOption("format", 140);
-        youtubeDLRequest.setOption("restrict-filenames");
+        youtubeDLRequest.setOption("id");
         YoutubeDLResponse execute = YoutubeDL.execute(youtubeDLRequest);
-        return execute.getOut();
+        String out = execute.getOut();
+        String s = out.split("\n")[1];
+        return s.split(": ")[1];
     }
 }
