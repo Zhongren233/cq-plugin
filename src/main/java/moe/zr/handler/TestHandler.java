@@ -1,9 +1,6 @@
 package moe.zr.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import moe.zr.annotation.Handler;
-import moe.zr.annotation.MessageContains;
-import moe.zr.annotation.MessageStartWith;
 import moe.zr.util.CQAPIUtil;
 import moe.zr.vo.in.Message;
 
@@ -13,7 +10,7 @@ import moe.zr.vo.in.Message;
 //@Handler
 @Slf4j
 public class TestHandler {
-    @MessageContains("朋友")
+//    @MessageContains("朋友")
     public static void ridicule(Message m) {
         CQAPIUtil.send.accept(
                 CQAPIUtil.castMessage.apply(m)
@@ -21,7 +18,7 @@ public class TestHandler {
         );
     }
 
-    @MessageStartWith("牵手")
+//    @MessageStartWith("牵手")
     public static void holdHands(Message m) {
         CQAPIUtil.send.accept(
                 CQAPIUtil.castMessage.apply(m)

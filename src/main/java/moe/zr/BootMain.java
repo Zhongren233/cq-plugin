@@ -5,7 +5,6 @@ import moe.zr.client.ListenedSocketClient;
 import moe.zr.util.CQAPIUtil;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 public class BootMain {
     public static void main(String[] args)  {

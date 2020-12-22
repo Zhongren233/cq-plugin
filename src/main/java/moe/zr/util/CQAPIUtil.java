@@ -24,11 +24,4 @@ public class CQAPIUtil {
     });
     public static Function<Message, SendMessage> castMessage = (SendMessage::new);
 
-/*
-
-    public static void holdHands(Message message) {
-    send.accept(castMessage.apply(message).setMessage("[CQ:image,file=2ee882b144dee9ce28e5da681626f529.image]"));
-    }
-
- */
 }

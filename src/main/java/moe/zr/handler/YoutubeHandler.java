@@ -12,24 +12,35 @@ import moe.zr.vo.in.Message;
  */
 @Handler
 public class YoutubeHandler {
-    @MessageStartWith("https://www.youtube.com/watch?")
     public static void downLoadAudio(Message message) {
         String url = message.getMessage();
         CQAPIUtil.send.accept(
                 CQAPIUtil.castMessage.apply(message)
-                        .setMessage("下载"+url)
+                        .setMessage("开始下载" + url)
         );
         String str;
         try {
             String filename = YoutubeService.downloadAudio(url);
-            str = "下载成功,地址为http://down.akina.xyz/"+filename;
+            str = "下载成功,地址为http://down.akina.xyz/" + filename;
         } catch (YoutubeDLException e) {
             e.printStackTrace();
-            str = e.getMessage();
+            str = "发生错误";
+            str += e.getMessage();
         }
         CQAPIUtil.send.accept(
                 CQAPIUtil.castMessage.apply(message)
                         .setMessage(str)
         );
     }
+
+    @MessageStartWith("https://www.youtube.com/watch?")
+    public static void normalLink(Message message) {
+        downLoadAudio(message);
+    }
+
+    @MessageStartWith("https://youtu.be/")
+    public static void shortLink(Message message) {
+        downLoadAudio(message);
+    }
+
 }

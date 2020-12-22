@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * 用这玩意的静态块去扫描所有被@{@link moe.zr.annotation.Handler} 标记的类
+ * 用这玩意的静态块去扫描所有此包中包含的 @{@link MessageContains} 和@{@link MessageStartWith}的方法
  * 然后把他们里面所有的方法存到对应的map里
  */
 @Slf4j
