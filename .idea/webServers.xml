@@ -5,7 +5,7 @@
       <webServer id="57240929-0795-4a94-9a55-8a7a8122f162" name="akina">
         <fileTransfer rootFolder="/home/zhong" accessType="SFTP" host="akina.xyz" port="22" sshConfigId="39927dff-3d46-4ca3-99f7-e6285e953d92" sshConfig="zhong@akina.xyz:22 password">
           <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+            <advancedOptions controlEncoding="UTF8" dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>

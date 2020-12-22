@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class MessageHandlerCenter {
     private static final HashMap<String, Method> containsMapping = new HashMap<>();
     private static final HashMap<String, Method> startWithMapping = new HashMap<>();
-    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
     static {
         Reflections reflections = new Reflections(
