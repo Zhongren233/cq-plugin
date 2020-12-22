@@ -1,6 +1,7 @@
 package moe.zr.handler;
 
 import com.sapher.youtubedl.YoutubeDLException;
+import lombok.extern.slf4j.Slf4j;
 import moe.zr.annotation.Handler;
 import moe.zr.annotation.MessageStartWith;
 import moe.zr.service.YoutubeService;
@@ -11,6 +12,7 @@ import moe.zr.vo.in.Message;
  * 此类用来处理Youtube相关逻辑
  */
 @Handler
+@Slf4j
 public class YoutubeHandler {
     public static void downLoadAudio(Message message) {
         String url = message.getMessage();
@@ -35,11 +37,13 @@ public class YoutubeHandler {
 
     @MessageStartWith("https://www.youtube.com/watch?")
     public static void normalLink(Message message) {
+        log.info("normalLink");
         downLoadAudio(message);
     }
 
     @MessageStartWith("https://youtu.be/")
     public static void shortLink(Message message) {
+        log.info("shortLink");
         downLoadAudio(message);
     }
 
