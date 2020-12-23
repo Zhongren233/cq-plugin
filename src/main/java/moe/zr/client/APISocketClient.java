@@ -3,11 +3,12 @@ package moe.zr.client;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import moe.zr.vo.in.Result;
+import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 @Slf4j
-public class APISocketClient extends org.java_websocket.client.WebSocketClient {
+public class APISocketClient extends WebSocketClient {
 
     public APISocketClient(URI serverUri) {
         super(serverUri);
@@ -34,7 +35,6 @@ public class APISocketClient extends org.java_websocket.client.WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-        log.warn("丢失连接");
         new Thread(this::reconnect).start();
     }
 

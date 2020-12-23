@@ -31,7 +31,6 @@ public class ListenedSocketClient extends WebSocketClient {
     @SneakyThrows
     @Override
     public void onClose(int i, String s, boolean b) {
-        log.warn("丢失连接");
         new Thread(this::reconnect).start();
     }
 
