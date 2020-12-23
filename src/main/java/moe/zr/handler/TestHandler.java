@@ -22,6 +22,7 @@ public class TestHandler {
     }
 
     @MessageStartWith("牵手")
+    @Probability(50)
     public static void holdHands(Message m) {
         CQAPIUtil.send.accept(
                 CQAPIUtil.castMessage.apply(m)

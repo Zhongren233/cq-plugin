@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * 用这玩意的静态块去扫描所有此包中包含的 @{@link MessageContains} 和@{@link MessageStartWith}的方法
+ * 用这玩意的静态块去扫描所有此包中包含 @{@link MessageContains} 和@{@link MessageStartWith}的方法
  * 然后把他们里面所有的方法存到对应的map里
  */
 @Slf4j
@@ -65,26 +65,28 @@ public class MessageHandlerCenter {
         for (var entry : CONTAINS_MAPPING.entrySet()) {
             String key = entry.getKey();
             Method value = entry.getValue();
-            if (message.getMessage().contains(key)) {
+            if (message.getMessage().contains(key))
                 return value;
-            }
         }
         for (var entry : START_WITH_MAPPING.entrySet()) {
             String key = entry.getKey();
             Method value = entry.getValue();
-            if (message.getMessage().startsWith(key)) {
+            if (message.getMessage().startsWith(key))
                 return value;
-            }
         }
         return null;
     }
 
+    /**
+     * 当方法被@{@link Probability} 修饰时
+     * 该方法会生成一个随机数并于注解中的值做比较
+     * 若注解的值大于等于生成的随机数,则返回true
+     */
     private static boolean probabilityTest(Method method) {
         boolean result;
         Probability annotation = method.getAnnotation(Probability.class);
-        if (annotation == null) {
+        if (annotation == null)
             return true;
-        }
         result = annotation.value() >= ThreadLocalRandom.current().nextInt(100);
         return result;
     }
