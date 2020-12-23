@@ -1,8 +1,10 @@
 package moe.zr.handler;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import moe.zr.annotation.MessageContains;
 import moe.zr.annotation.MessageStartWith;
+import moe.zr.annotation.Probability;
 import moe.zr.vo.in.Message;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -10,8 +12,11 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.OptionalInt;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.IntStream;
 
 /**
  * 用这玩意的静态块去扫描所有此包中包含的 @{@link MessageContains} 和@{@link MessageStartWith}的方法
@@ -19,19 +24,22 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 public class MessageHandlerCenter {
-    private static final HashMap<String, Method> containsMapping = new HashMap<>();
-    private static final HashMap<String, Method> startWithMapping = new HashMap<>();
+    private static final HashMap<String, Method> CONTAINS_MAPPING = new HashMap<>();
+    private static final HashMap<String, Method> START_WITH_MAPPING = new HashMap<>();
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
+    private static final IntStream INT_STREAM = new Random().ints(0, 100);
+
 
     static {
         Reflections reflections = new Reflections(
                 MessageHandlerCenter.class.getPackage().getName(),
                 new MethodAnnotationsScanner()
         );
-        reflections.getMethodsAnnotatedWith(MessageContains.class).forEach(method -> containsMapping.put(method.getAnnotation(MessageContains.class).value(), method)
+        reflections.getMethodsAnnotatedWith(MessageContains.class).forEach(method ->
+                CONTAINS_MAPPING.put(method.getAnnotation(MessageContains.class).value(), method)
         );
         reflections.getMethodsAnnotatedWith(MessageStartWith.class).forEach(method ->
-                startWithMapping.put(method.getAnnotation(MessageStartWith.class).value(), method)
+                START_WITH_MAPPING.put(method.getAnnotation(MessageStartWith.class).value(), method)
         );
 
     }
@@ -43,28 +51,47 @@ public class MessageHandlerCenter {
                 message.getSender().getNickname(),
                 message.getSender().getUser_id(),
                 message.getMessage());
-        EXECUTOR_SERVICE.execute(() -> searchMethodAndInvoke(message));
+        Runnable task = () -> {
+            Method method = searchMethod(message);
+            if (method != null && probabilityTest(method)) {
+                try {
+                    method.invoke(Message.class.newInstance(), message);
+                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        EXECUTOR_SERVICE.execute(task);
     }
 
-    private static void searchMethodAndInvoke(Message message) {
-        containsMapping.forEach((k, v) -> {
-            if (message.getMessage().contains(k)) {
-                try {
-                    v.invoke(Message.class.newInstance(), message);
-                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                    e.printStackTrace();
-                }
+    private static Method searchMethod(Message message) {
+        for (var entry : CONTAINS_MAPPING.entrySet()) {
+            String key = entry.getKey();
+            Method value = entry.getValue();
+            if (message.getMessage().contains(key)) {
+                return value;
             }
-        });
-        startWithMapping.forEach((k, v) -> {
-            if (message.getMessage().startsWith(k)) {
-                try {
-                    v.invoke(Message.class.newInstance(), message);
-                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                    e.printStackTrace();
-                }
+        }
+        for (var entry : START_WITH_MAPPING.entrySet()) {
+            String key = entry.getKey();
+            Method value = entry.getValue();
+            if (message.getMessage().startsWith(key)) {
+                return value;
             }
-        });
+        }
+        return null;
+    }
+
+    private static boolean probabilityTest(Method method) {
+        Probability annotation = method.getAnnotation(Probability.class);
+        if (annotation == null)
+            return true;
+        boolean result = false;
+        OptionalInt any = INT_STREAM.findAny();
+        if (any.isPresent())
+            result = (any.getAsInt() > annotation.value());
+        return result;
     }
 
 }

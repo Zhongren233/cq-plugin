@@ -7,7 +7,6 @@ import moe.zr.vo.in.Message;
 /**
  * 先把这玩意禁用 要不然全是牵手
  */
-//@Handler
 @Slf4j
 public class TestHandler {
 //    @MessageContains("朋友")
