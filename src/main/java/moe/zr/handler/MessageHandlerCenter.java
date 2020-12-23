@@ -80,10 +80,11 @@ public class MessageHandlerCenter {
     }
 
     private static boolean probabilityTest(Method method) {
-        Probability annotation = method.getAnnotation(Probability.class);
-        if (annotation == null)
-            return true;
         boolean result;
+        Probability annotation = method.getAnnotation(Probability.class);
+        if (annotation == null) {
+            return true;
+        }
         result = annotation.value() >= ThreadLocalRandom.current().nextInt(100);
         return result;
     }
