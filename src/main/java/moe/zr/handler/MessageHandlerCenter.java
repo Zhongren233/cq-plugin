@@ -12,11 +12,9 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.OptionalInt;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.IntStream;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 用这玩意的静态块去扫描所有此包中包含的 @{@link MessageContains} 和@{@link MessageStartWith}的方法
@@ -27,8 +25,6 @@ public class MessageHandlerCenter {
     private static final HashMap<String, Method> CONTAINS_MAPPING = new HashMap<>();
     private static final HashMap<String, Method> START_WITH_MAPPING = new HashMap<>();
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
-    private static final IntStream INT_STREAM = new Random().ints(0, 100);
-
 
     static {
         Reflections reflections = new Reflections(
@@ -87,10 +83,8 @@ public class MessageHandlerCenter {
         Probability annotation = method.getAnnotation(Probability.class);
         if (annotation == null)
             return true;
-        boolean result = false;
-        OptionalInt any = INT_STREAM.findAny();
-        if (any.isPresent())
-            result = (any.getAsInt() > annotation.value());
+        boolean result;
+        result = annotation.value() >= ThreadLocalRandom.current().nextInt(100);
         return result;
     }
 
