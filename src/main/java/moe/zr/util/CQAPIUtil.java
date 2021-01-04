@@ -17,11 +17,14 @@ public class CQAPIUtil {
         CQAPIUtil.socketClient = socketClient;
     }
 
-    public static Consumer<SendMessage> send = (message -> {
+    private static Consumer<SendMessage> send = (message -> {
         CQAPI send_msg = new CQAPI().setAction("send_msg").setParams(message).setEcho(UUID.randomUUID().toString());
         String s = JSON.toJSONString(send_msg);
         socketClient.send(s);
     });
-    public static Function<Message, SendMessage> castMessage = (SendMessage::new);
+    private static Function<Message, SendMessage> castMessage = (SendMessage::new);
 
+    public static void sendMessage(Message message,String text) {
+        send.accept(castMessage.apply(message).setMessage(text));
+    }
 }

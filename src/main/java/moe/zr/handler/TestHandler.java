@@ -15,19 +15,13 @@ public class TestHandler {
     @MessageContains("朋友")
     @Probability(50)
     public static void ridicule(Message m) {
-        CQAPIUtil.send.accept(
-                CQAPIUtil.castMessage.apply(m)
-                        .setMessage("[CQ:image,file=7b754c81dffa4018ac179eac8805c062.image]")
-        );
+        CQAPIUtil.sendMessage(m, "[CQ:image,file=7b754c81dffa4018ac179eac8805c062.image]");
     }
 
     @MessageStartWith("牵手")
     @Probability(50)
     public static void holdHands(Message m) {
-        CQAPIUtil.send.accept(
-                CQAPIUtil.castMessage.apply(m)
-                        .setMessage("[CQ:image,file=2ee882b144dee9ce28e5da681626f529.image]")
-        );
+        CQAPIUtil.sendMessage(m, "[CQ:image,file=2ee882b144dee9ce28e5da681626f529.image]");
     }
 
 

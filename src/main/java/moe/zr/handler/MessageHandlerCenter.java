@@ -2,6 +2,7 @@ package moe.zr.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
+import moe.zr.annotation.Command;
 import moe.zr.annotation.MessageContains;
 import moe.zr.annotation.MessageStartWith;
 import moe.zr.annotation.Probability;
@@ -12,9 +13,11 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 用这玩意的静态块去扫描所有此包中包含 @{@link MessageContains} 和@{@link MessageStartWith}的方法
@@ -24,7 +27,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MessageHandlerCenter {
     private static final HashMap<String, Method> CONTAINS_MAPPING = new HashMap<>();
     private static final HashMap<String, Method> START_WITH_MAPPING = new HashMap<>();
-    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
+    private static final HashMap<String, Method> COMMAND_MAPPING = new HashMap<>();
+
+    private static final ThreadPoolExecutor EXECUTOR_SERVICE = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
 
     static {
         Reflections reflections = new Reflections(
@@ -36,6 +41,9 @@ public class MessageHandlerCenter {
         );
         reflections.getMethodsAnnotatedWith(MessageStartWith.class).forEach(method ->
                 START_WITH_MAPPING.put(method.getAnnotation(MessageStartWith.class).value(), method)
+        );
+        reflections.getMethodsAnnotatedWith(Command.class).forEach(method ->
+                COMMAND_MAPPING.put(method.getAnnotation(Command.class).value(), method)
         );
 
     }
@@ -62,16 +70,22 @@ public class MessageHandlerCenter {
     }
 
     private static Method searchMethod(Message message) {
+        String text = message.getMessage();
+        if (text.startsWith("!")) {
+            String[] s = text.split(" ");
+            String substring = s[0].substring(1);
+            return COMMAND_MAPPING.get(substring);
+        }
         for (var entry : CONTAINS_MAPPING.entrySet()) {
             String key = entry.getKey();
             Method value = entry.getValue();
-            if (message.getMessage().contains(key))
+            if (text.contains(key))
                 return value;
         }
         for (var entry : START_WITH_MAPPING.entrySet()) {
             String key = entry.getKey();
             Method value = entry.getValue();
-            if (message.getMessage().startsWith(key))
+            if (text.startsWith(key))
                 return value;
         }
         return null;
@@ -83,12 +97,26 @@ public class MessageHandlerCenter {
      * 若注解的值大于等于生成的随机数,则返回true
      */
     private static boolean probabilityTest(Method method) {
-        boolean result;
         Probability annotation = method.getAnnotation(Probability.class);
         if (annotation == null)
             return true;
-        result = annotation.value() >= ThreadLocalRandom.current().nextInt(100);
-        return result;
+        return annotation.value() >= ThreadLocalRandom.current().nextInt(100);
+    }
+
+    public static HashMap<String, Method> getContainsMapping() {
+        return CONTAINS_MAPPING;
+    }
+
+    public static HashMap<String, Method> getStartWithMapping() {
+        return START_WITH_MAPPING;
+    }
+
+    public static HashMap<String, Method> getCommandMapping() {
+        return COMMAND_MAPPING;
+    }
+
+    public static ThreadPoolExecutor getExecutorService() {
+        return EXECUTOR_SERVICE;
     }
 
 }

@@ -14,10 +14,7 @@ import moe.zr.vo.in.Message;
 public class YoutubeHandler {
     public static void downLoadAudio(Message message) {
         String url = message.getMessage();
-        CQAPIUtil.send.accept(
-                CQAPIUtil.castMessage.apply(message)
-                        .setMessage("开始下载" + url)
-        );
+        CQAPIUtil.sendMessage(message, url);
         String str;
         try {
             String filename = YoutubeService.downloadAudio(url);
@@ -27,10 +24,7 @@ public class YoutubeHandler {
             str = "发生错误";
             str += e.getMessage();
         }
-        CQAPIUtil.send.accept(
-                CQAPIUtil.castMessage.apply(message)
-                        .setMessage(str)
-        );
+        CQAPIUtil.sendMessage(message, str);
     }
 
     @MessageStartWith("https://www.youtube.com/watch?")
